@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     #Добавил django_filters
     'django_filters',
 
+    #Добавил приложение web
+    'web',
     #мои предложения
     'employees',
     'categories',
@@ -66,7 +68,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
