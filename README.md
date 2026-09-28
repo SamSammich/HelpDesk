@@ -1,3 +1,379 @@
+# HelpDesk — система управления IT-заявками
+
+Веб-приложение для внутренней IT-службы, предназначенное для регистрации, просмотра и управления заявками сотрудников.
+
+## Возможности
+
+* Управление сотрудниками
+* Управление категориями заявок
+* Создание и управление IT-заявками
+* Отслеживание статуса и приоритета заявок
+* Фильтрация заявок
+* Поиск по названию и описанию
+* Django Admin
+* REST API
+* Веб-интерфейс на Django Templates
+* PostgreSQL
+* Docker и Docker Compose
+
+## Технологии
+
+* Python 3.12
+* Django 6.1
+* Django REST Framework
+* django-filter
+* PostgreSQL 16
+* Docker
+* Docker Compose
+* Django Templates
+* Poetry
+
+## Структура проекта
+
+```text
+HelpDesk/
+├── categories/
+│   ├── admin.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── urls.py
+│   └── views.py
+│
+├── employees/
+│   ├── admin.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── urls.py
+│   └── views.py
+│
+├── tickets/
+│   ├── admin.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── urls.py
+│   └── views.py
+│
+├── web/
+│   ├── urls.py
+│   └── views.py
+│
+├── templates/
+│   ├── base.html
+│   ├── home.html
+│   └── tickets/
+│
+├── config/
+│   ├── settings.py
+│   ├── urls.py
+│   ├── asgi.py
+│   └── wsgi.py
+│
+├── Dockerfile
+├── docker-compose.yml
+├── .env.example
+├── .gitignore
+├── manage.py
+├── pyproject.toml
+└── poetry.lock
+```
+
+## Модели
+
+### Сотрудник
+
+Содержит:
+
+* ID
+* ФИО
+* Email
+* Отдел
+* Дата создания
+
+### Категория
+
+Содержит:
+
+* ID
+* Название
+* Описание
+* Активность
+* Дата создания
+
+### Заявка
+
+Содержит:
+
+* ID
+* Сотрудник
+* Категория
+* Название
+* Описание
+* Статус
+* Приоритет
+* Дата создания
+* Дата обновления
+
+### Статусы заявки
+
+* `NEW` — новая
+* `IN_PROGRESS` — в работе
+* `RESOLVED` — решена
+* `CLOSED` — закрыта
+
+### Приоритеты
+
+* `LOW` — низкий
+* `MEDIUM` — средний
+* `HIGH` — высокий
+* `CRITICAL` — критический
+
+## REST API
+
+### Сотрудники
+
+```text
+GET    /api/employees/
+POST   /api/employees/
+GET    /api/employees/<id>/
+PUT    /api/employees/<id>/
+PATCH  /api/employees/<id>/
+DELETE /api/employees/<id>/
+```
+
+### Категории
+
+```text
+GET    /api/categories/
+POST   /api/categories/
+GET    /api/categories/<id>/
+PUT    /api/categories/<id>/
+PATCH  /api/categories/<id>/
+DELETE /api/categories/<id>/
+```
+
+### Заявки
+
+```text
+GET    /api/tickets/
+POST   /api/tickets/
+GET    /api/tickets/<id>/
+PUT    /api/tickets/<id>/
+PATCH  /api/tickets/<id>/
+DELETE /api/tickets/<id>/
+```
+
+## Фильтрация заявок
+
+Фильтрация доступна по:
+
+* статусу
+* приоритету
+* категории
+* сотруднику
+
+Примеры:
+
+```text
+/api/tickets/?status=NEW
+/api/tickets/?priority=HIGH
+/api/tickets/?category=2
+/api/tickets/?employee=5
+```
+
+## Поиск
+
+Поиск выполняется по названию и описанию заявки:
+
+```text
+/api/tickets/?search=printer
+```
+
+## Веб-интерфейс
+
+Основные страницы:
+
+```text
+/                       — Dashboard
+/tickets/               — список заявок
+/tickets/<id>/          — информация о заявке
+/tickets/create/        — создание заявки
+/admin/                 — административная панель
+```
+
+Dashboard отображает:
+
+* общее количество заявок
+* количество новых заявок
+* количество решённых заявок
+* последние заявки
+
+## Django Admin
+
+В административной панели зарегистрированы:
+
+* Employees
+* Categories
+* Tickets
+
+Для заявок доступны:
+
+* отображение основных полей
+* фильтрация по статусу
+* фильтрация по приоритету
+* фильтрация по категории
+* поиск по названию заявки
+* поиск по имени сотрудника
+
+## Запуск через Docker
+
+Для запуска проекта необходимы:
+
+* Docker
+* Docker Compose
+
+Клонировать репозиторий:
+
+```bash
+git clone https://github.com/SamSammich/HelpDesk.git
+cd HelpDesk
+```
+
+Запустить проект:
+
+```bash
+docker compose up --build
+```
+
+После запуска приложение доступно по адресу:
+
+```text
+http://127.0.0.1:8000/
+```
+
+Django Admin:
+
+```text
+http://127.0.0.1:8000/admin/
+```
+
+## Создание администратора
+
+Для создания суперпользователя:
+
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+После этого можно войти в административную панель:
+
+```text
+http://127.0.0.1:8000/admin/
+```
+
+## Переменные окружения
+
+Для настройки подключения к базе данных используется файл `.env`.
+
+Пример конфигурации находится в:
+
+```text
+.env.example
+```
+
+Файл `.env` не добавляется в Git и должен использоваться для локальных секретных настроек.
+
+## Полезные Docker-команды
+
+Запуск:
+
+```bash
+docker compose up
+```
+
+Запуск с пересборкой:
+
+```bash
+docker compose up --build
+```
+
+Запуск в фоновом режиме:
+
+```bash
+docker compose up -d
+```
+
+Остановка:
+
+```bash
+docker compose down
+```
+
+Просмотр контейнеров:
+
+```bash
+docker compose ps
+```
+
+Просмотр логов:
+
+```bash
+docker compose logs
+```
+
+Открыть shell Django-контейнера:
+
+```bash
+docker compose exec web sh
+```
+
+## База данных
+
+Проект использует PostgreSQL 16.
+
+PostgreSQL запускается автоматически через Docker Compose и сохраняет данные в Docker volume.
+
+При запуске приложения Django автоматически выполняет миграции:
+
+```bash
+python manage.py migrate
+```
+
+## Архитектура
+
+Проект разделён на отдельные Django-приложения:
+
+* `employees` — работа с сотрудниками
+* `categories` — работа с категориями
+* `tickets` — работа с заявками
+* `web` — веб-интерфейс
+* `config` — настройки и конфигурация проекта
+
+REST API реализован с использованием Django REST Framework и ViewSet/Router.
+
+Веб-интерфейс реализован с использованием стандартных Django Templates.
+
+## Проверка проекта
+
+Проект был проверен после настройки Docker и PostgreSQL:
+
+* приложение запускается через Docker Compose
+* PostgreSQL подключается корректно
+* миграции выполняются автоматически
+* REST API доступен
+* Django Admin доступен
+* веб-интерфейс работает
+* создание заявок работает
+
+## Автор
+
+**Abdusamatov Somon**
+
+GitHub:
+https://github.com/SamSammich
+
+
+
 # HelpDesk
 
 A web-based IT HelpDesk system for managing technical support requests.
