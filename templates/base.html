@@ -54,9 +54,9 @@
 <body>
 
 <nav>
-    <a href="/">HelpDesk</a>
-    <a href="/tickets/">Tickets</a>
-    <a href="/tickets/create/">Create Ticket</a>
+    <a href="{% url 'home' %}">HelpDesk</a>
+    <a href="{% url 'ticket_list' %}">Tickets</a>
+    <a href="{% url 'ticket_create' %}">Create Ticket</a>
     <a href="/admin/">Admin</a>
 </nav>
 
