@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Tickets - HelpDesk{% endblock %}
+
+{% block content %}
+
+<h1>All Tickets</h1>
+
+<div class="card">
+
+    {% if tickets %}
+
+        {% for ticket in tickets %}
+
+            <div>
+                <h2>
+                    <a href="/tickets/{{ ticket.id }}/">
+                        #{{ ticket.id }} — {{ ticket.title }}
+                    </a>
+                </h2>
+
+                <p>
+                    <strong>Employee:</strong>
+                    {{ ticket.employee.full_name }}
+                </p>
+
+                <p>
+                    <strong>Department:</strong>
+                    {{ ticket.employee.department }}
+                </p>
+
+                <p>
+                    <strong>Category:</strong>
+                    {{ ticket.category.name }}
+                </p>
+
+                <p>
+                    <strong>Priority:</strong>
+                    {{ ticket.priority }}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    {{ ticket.status }}
+                </p>
+
+                <p>
+                    <strong>Created:</strong>
+                    {{ ticket.created_at|date:"d.m.Y H:i" }}
+                </p>
+            </div>
+
+            <hr>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No tickets found.</p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
