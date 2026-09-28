@@ -1,6 +1,7 @@
-from django.shortcuts import get_object_or_404, render
-from tickets.models import Ticket
+from django.shortcuts import get_object_or_404, redirect, render
 
+from tickets.forms import TicketForm
+from tickets.models import Ticket
 
 def home(request):
     total_tickets = Ticket.objects.count()
@@ -54,4 +55,22 @@ def ticket_detail(request, ticket_id):
         request,
         'tickets/ticket_detail.html',
         {'ticket': ticket},
+    )
+def ticket_create(request):
+    if request.method == 'POST':
+        form = TicketForm(request.POST)
+
+        if form.is_valid():
+            ticket = form.save()
+            return redirect(
+                'ticket_detail',
+                ticket_id=ticket.id,
+            )
+    else:
+        form = TicketForm()
+
+    return render(
+        request,
+        'tickets/ticket_create.html',
+        {'form': form},
     )
