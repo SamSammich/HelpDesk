@@ -54,6 +54,24 @@ asgiref = ">=3.6"
 django = ">=4.2"
 
 [[package]]
+name = "django-filter"
+version = "26.1"
+description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "django_filter-26.1-py3-none-any.whl", hash = "sha256:7d98ef2899218e6242619b532cb1b95af14e09dfcf74844aecb550ad27b59ff2"},
+    {file = "django_filter-26.1.tar.gz", hash = "sha256:66ea04031b068c77c86e1ac26ced7a3f8f13ce797f5795751707e3deefc58054"},
+]
+
+[package.dependencies]
+Django = ">=5.2"
+
+[package.extras]
+drf = ["djangorestframework"]
+
+[[package]]
 name = "djangorestframework"
 version = "3.18.1"
 description = "Web APIs for Django, made easy."
@@ -217,4 +235,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "2c17127be5c0b77ec2f81c9c3149a9bf76907df7102bc245dbd4ae3bc9351780"
+content-hash = "3813fea8b2aa51dc14d6e752f2b99d3a2c5fb45eb59625f6b51b01496df6efd7"

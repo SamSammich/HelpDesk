@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     # Django REST Framework
     'rest_framework',
+    #Добавил django_filters
+    'django_filters',
 
     #мои предложения
     'employees',
