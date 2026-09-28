@@ -10,6 +10,11 @@
 * Отслеживание статуса и приоритета заявок
 * Фильтрация заявок
 * Поиск по названию и описанию
+* Авторизация пользователей
+* Разделение прав сотрудников и администраторов
+* Сотрудник видит только свои заявки
+* Сотрудник не может создать заявку от имени другого сотрудника
+* Администратор видит и управляет всеми заявками
 * Django Admin
 * REST API
 * Веб-интерфейс на Django Templates
@@ -88,6 +93,7 @@ HelpDesk/
 * ФИО
 * Email
 * Отдел
+* Связь с пользователем Django
 * Дата создания
 
 ### Категория
@@ -128,6 +134,27 @@ HelpDesk/
 * `HIGH` — высокий
 * `CRITICAL` — критический
 
+## Авторизация и права доступа
+
+Страница входа:
+
+```text
+/login/
+```
+
+После авторизации сотрудник может:
+
+* создавать заявки
+* просматривать только свои заявки
+* просматривать детали своих заявок
+
+Администратор может:
+
+* просматривать все заявки
+* изменять статус и приоритет заявок
+* управлять сотрудниками и категориями через Django Admin
+* управлять заявками через Django Admin
+
 ## REST API
 
 ### Сотрудники
@@ -163,6 +190,16 @@ PATCH  /api/tickets/<id>/
 DELETE /api/tickets/<id>/
 ```
 
+### Доступ к заявкам
+
+API заявок требует авторизации.
+
+Сотрудник получает доступ только к своим заявкам.
+
+Администратор получает доступ ко всем заявкам.
+
+При создании заявки через API сотрудник определяется автоматически по авторизованному пользователю.
+
 ## Фильтрация заявок
 
 Фильтрация доступна по:
@@ -194,6 +231,7 @@ DELETE /api/tickets/<id>/
 Основные страницы:
 
 ```text
+/login/                 — авторизация
 /                       — Dashboard
 /tickets/               — список заявок
 /tickets/<id>/          — информация о заявке
@@ -219,6 +257,7 @@ Dashboard отображает:
 Для заявок доступны:
 
 * отображение основных полей
+* изменение статуса и приоритета
 * фильтрация по статусу
 * фильтрация по приоритету
 * фильтрация по категории
@@ -343,15 +382,20 @@ python manage.py migrate
 
 Проект разделён на отдельные Django-приложения:
 
-* `employees` — работа с сотрудниками
+* `employees` — работа с сотрудниками и связь с пользователями Django
 * `categories` — работа с категориями
-* `tickets` — работа с заявками
-* `web` — веб-интерфейс
+* `tickets` — работа с заявками и их API
+* `web` — веб-интерфейс и авторизация
 * `config` — настройки и конфигурация проекта
 
 REST API реализован с использованием Django REST Framework и ViewSet/Router.
 
 Веб-интерфейс реализован с использованием стандартных Django Templates.
+
+Права доступа к заявкам зависят от роли пользователя:
+
+* сотрудники работают только со своими заявками
+* администраторы имеют доступ ко всем заявкам
 
 ## Проверка проекта
 
@@ -363,6 +407,12 @@ REST API реализован с использованием Django REST Framew
 * REST API доступен
 * Django Admin доступен
 * веб-интерфейс работает
+* авторизация пользователей работает
+* сотрудник видит только свои заявки
+* сотрудник может создавать заявки
+* администратор имеет доступ ко всем заявкам
+* администратор может изменять статус и приоритет заявок
+* права доступа к заявкам проверяются
 * создание заявок работает
 
 ## Автор
@@ -371,8 +421,6 @@ REST API реализован с использованием Django REST Framew
 
 GitHub:
 https://github.com/SamSammich
-
-
 
 # HelpDesk
 
@@ -387,6 +435,11 @@ Employees can create support tickets, while administrators can manage employees,
 * Ticket management
 * Ticket priorities
 * Ticket statuses
+* User authentication
+* Role-based access for employees and administrators
+* Employees can view only their own tickets
+* Employees cannot create tickets on behalf of other employees
+* Administrators can view and manage all tickets
 * REST API
 * Ticket filtering
 * Ticket search
@@ -462,6 +515,27 @@ HelpDesk/
 └── README.md
 ```
 
+## Authentication and Access Control
+
+Login page:
+
+```text
+/login/
+```
+
+Employees can:
+
+* create support tickets
+* view only their own tickets
+* view details of their own tickets
+
+Administrators can:
+
+* view all tickets
+* change ticket status and priority
+* manage employees and categories through Django Admin
+* manage all tickets through Django Admin
+
 ## Running with Docker
 
 Make sure Docker Desktop is installed and running.
@@ -531,6 +605,16 @@ PATCH  /api/tickets/<id>/
 DELETE /api/tickets/<id>/
 ```
 
+### Ticket API Access
+
+Ticket API endpoints require authentication.
+
+Employees can access only their own tickets.
+
+Administrators can access all tickets.
+
+When an employee creates a ticket through the API, the employee is assigned automatically from the authenticated user.
+
 ## Ticket Filtering
 
 Filter by status:
@@ -571,6 +655,12 @@ Dashboard:
 
 ```text
 /
+```
+
+Login:
+
+```text
+/login/
 ```
 
 Tickets:
@@ -710,24 +800,29 @@ The web interface uses Django Templates.
 
 Django Admin provides administrative management of all core entities.
 
+Access control ensures that employees can work only with their own tickets, while administrators can access all tickets.
+
 ## Main Requirements Covered
 
-| Requirement      | Status   |
-| ---------------- | -------- |
-| Employee model   | Complete |
-| Category model   | Complete |
-| Ticket model     | Complete |
-| Django Admin     | Complete |
-| REST CRUD        | Complete |
-| Ticket filtering | Complete |
-| Ticket search    | Complete |
-| Dashboard        | Complete |
-| Ticket list      | Complete |
-| Ticket detail    | Complete |
-| Ticket creation  | Complete |
-| PostgreSQL       | Complete |
-| Docker           | Complete |
-| Documentation    | Complete |
+| Requirement               | Status   |
+| ------------------------- | -------- |
+| Employee model            | Complete |
+| Category model            | Complete |
+| Ticket model              | Complete |
+| User authentication       | Complete |
+| Ticket access control     | Complete |
+| Employee ticket ownership | Complete |
+| Django Admin              | Complete |
+| REST CRUD                 | Complete |
+| Ticket filtering          | Complete |
+| Ticket search             | Complete |
+| Dashboard                 | Complete |
+| Ticket list               | Complete |
+| Ticket detail             | Complete |
+| Ticket creation           | Complete |
+| PostgreSQL                | Complete |
+| Docker                    | Complete |
+| Documentation             | Complete |
 
 ## Author
 
