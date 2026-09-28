@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import Ticket
 
 
@@ -23,4 +24,14 @@ class TicketAdmin(admin.ModelAdmin):
     search_fields = (
         'title',
         'employee__full_name',
+    )
+
+    list_editable = (
+        'priority',
+        'status',
+    )
+
+    readonly_fields = (
+        'created_at',
+        'updated_at',
     )
